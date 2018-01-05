@@ -6,12 +6,12 @@ import subprocess
 # Simulates a fastq file that has been produced from cross-contaminated NGS samples.  The user provides
 # paired-end fastq sample files and paired-end fastq 'contaminating' files, specifies the proportion
 # of contamination required - the script randomly selects reads form the 'contaminating' file and
-# concatenates them to the sample file
+# sample files in the correct proportions and concatenates them into a single file
 
 # Requirements:
 # Uses the tool fastq-sample to sample random reads from a fastq file
 # (See https://homes.cs.washington.edu/~dcjones/fastq-tools/fastq-sample.html).
-# fastq-tools-0.8 requires the libraries zlib () and pcre () to be installed.
+# fastq-tools-0.8 requires the libraries zlib (https://zlib.net/) and pcre (https://www.pcre.org/) to be installed.
 # See the readme.txt for instructions on installing these C libraries and fastq-tools-0.8
 
 # Usage:

@@ -29,7 +29,7 @@ parser.add_argument('-sampleFiles', '-f', type=str, nargs=2,
                     help='Two paired-end fastq files containing the sample data')
 parser.add_argument('-contaminantFiles', '-c', type=str, nargs=2,
                     help='Two paired-end fastq files containing the  contaminating data')
-parser.add_argument('-proportionContaminant', '-p', type=float,
+parser.add_argument('-proportionContaminant', '-p', type=float, nargs='*',
                     help='Array specifying the proportion (>0 & <=0.5) of contamination required.')
 parser.add_argument('-seed', '-s', type=int,
                     help='Seed the random number generator. The same seed on the same data set will produce the same random sample.')
@@ -121,10 +121,13 @@ seedNum = args.seed
 # Sanity check on input
 checkInputFiles(sampleReads1, sampleReads2, contaminantReads1, contaminantReads2)
 
-# Calculate number of reads required from each file
-numOfLines, numOfSampleReads, numOfContaminantReads = calculateLinesRequired(sampleReads1, contaminantReads1,
-                                                                             proportionContaminant)
+#Reiterate over supplied array of user requsted proportions
+for prop in proportionContaminant:
 
-# Simulate a file with x% contaminantion:
-simulateContamination(sampleReads1, sampleReads2, contaminantReads1, contaminantReads2,
-                      proportionContaminant, numOfSampleReads, numOfContaminantReads, seedNum)
+    # Calculate number of reads required from each file
+    numOfLines, numOfSampleReads, numOfContaminantReads = calculateLinesRequired(sampleReads1, contaminantReads1,
+                                                                             prop)
+
+    # Simulate a file with x% contaminantion:
+    simulateContamination(sampleReads1, sampleReads2, contaminantReads1, contaminantReads2,
+                      prop, numOfSampleReads, numOfContaminantReads, seedNum)

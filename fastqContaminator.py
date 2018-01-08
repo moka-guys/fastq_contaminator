@@ -56,10 +56,7 @@ def checkInputFiles(sampleReads1, sampleReads2, contaminantReads1, contaminantRe
 
 
 # Function calculates the number of lines required from the sample/contaminating file to simulate x% contamination when added to sample file.
-def calculateLinesRequired(sampleReads1, contaminantReads1, proportionContaminant):
-    # Calculate the number of lines in the current sample file:
-    numOfLines = countFileLines(sampleReads1)
-
+def calculateLinesRequired(sampleReads1, contaminantReads1, proportionContaminant, numOfLines):
     # Calculate the number of lines to sample from sample file to add to new file:
     numOfSampleLines = int(numOfLines * (1 - proportionContaminant))
     numOfSampleReads = int(numOfSampleLines / 4)
@@ -73,7 +70,7 @@ def calculateLinesRequired(sampleReads1, contaminantReads1, proportionContaminan
         print "Contamination file too small to provide the %d lines required for %f contamination." % (
         numOfContaminantLines, proportionContaminant)
         sys.exit()
-    return numOfLines, numOfSampleReads, numOfContaminantReads
+    return numOfSampleReads, numOfContaminantReads
 
 
 def sampleFastqReads(file1, file2, seedNum, numOfLinesRequired, myPrefix):
@@ -121,12 +118,15 @@ seedNum = args.seed
 # Sanity check on input
 checkInputFiles(sampleReads1, sampleReads2, contaminantReads1, contaminantReads2)
 
+# Calculate the number of lines in the current sample file:
+numOfLines = countFileLines(sampleReads1)
+
 #Reiterate over supplied array of user requsted proportions
 for prop in proportionContaminant:
 
     # Calculate number of reads required from each file
-    numOfLines, numOfSampleReads, numOfContaminantReads = calculateLinesRequired(sampleReads1, contaminantReads1,
-                                                                             prop)
+    numOfSampleReads, numOfContaminantReads = calculateLinesRequired(sampleReads1, contaminantReads1,
+                                                                        prop, numOfLines)
 
     # Simulate a file with x% contaminantion:
     simulateContamination(sampleReads1, sampleReads2, contaminantReads1, contaminantReads2,
